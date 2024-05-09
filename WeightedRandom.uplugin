@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Weighted Random",
+	"Description": "",
+	"Category": "Other",
+	"CreatedBy": "ROJO",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "https://www.unrealengine.com/marketplace/profile/ROJO/",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "WeightedRandom",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
