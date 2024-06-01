@@ -7,7 +7,7 @@ struct FIndexWeightedSampler : public FWeightedRandomSampler
 public:
 	FIndexWeightedSampler() = default;
 
-	FIndexWeightedSampler(int32 IndexRange, TConstArrayView<float> IndexWeights)
+	FIndexWeightedSampler(const int32 IndexRange, const TConstArrayView<float> IndexWeights)
 	{
 		TotalWeight = 0.0f;
 		PerIndexWeight.Reserve(IndexRange);
@@ -37,7 +37,7 @@ public:
 
 void UWeightedRandomBlueprintFunctionLibrary::GenerateWeightedRandomIndex(const TArray<float>& Weights, int32& RandomIndex)
 {
-	return GenerateWeightedRandomIndexFromStream(Weights, FRandomStream(), RandomIndex);
+	return GenerateWeightedRandomIndexFromStream(Weights, FRandomStream(static_cast<int32>(FDateTime::UtcNow().ToUnixTimestamp())), RandomIndex);
 }
 
 void UWeightedRandomBlueprintFunctionLibrary::GenerateWeightedRandomIndexFromStream(const TArray<float>& Weights, const FRandomStream& RandomStream, int32& RandomIndex)
@@ -50,12 +50,12 @@ void UWeightedRandomBlueprintFunctionLibrary::GenerateWeightedRandomIndexFromStr
 	RandomIndex = Sampler.GetEntryIndex(RandomStream.FRand(), RandomStream.FRand());
 }
 
-void UWeightedRandomBlueprintFunctionLibrary::GenerateWeightedRandomIndices(const TArray<float>& Weights, int32 NumIndicesToGenerate, TArray<int32>& RandomIndices)
+void UWeightedRandomBlueprintFunctionLibrary::GenerateWeightedRandomIndices(const TArray<float>& Weights, const int32 NumIndicesToGenerate, TArray<int32>& RandomIndices)
 {
-	return GenerateWeightedRandomIndicesFromStream(Weights, NumIndicesToGenerate, FRandomStream(), RandomIndices);
+	return GenerateWeightedRandomIndicesFromStream(Weights, NumIndicesToGenerate, FRandomStream(static_cast<int32>(FDateTime::UtcNow().ToUnixTimestamp())), RandomIndices);
 }
 
-void UWeightedRandomBlueprintFunctionLibrary::GenerateWeightedRandomIndicesFromStream(const TArray<float>& Weights, int32 NumIndicesToGenerate, const FRandomStream& RandomStream, TArray<int32>& RandomIndices)
+void UWeightedRandomBlueprintFunctionLibrary::GenerateWeightedRandomIndicesFromStream(const TArray<float>& Weights, const int32 NumIndicesToGenerate, const FRandomStream& RandomStream, TArray<int32>& RandomIndices)
 {
 	if (Weights.IsEmpty()) return;
 
