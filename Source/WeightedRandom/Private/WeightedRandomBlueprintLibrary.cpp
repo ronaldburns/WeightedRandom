@@ -37,7 +37,12 @@ public:
 
 void UWeightedRandomBlueprintFunctionLibrary::GenerateWeightedRandomIndex(const TArray<float>& Weights, int32& RandomIndex)
 {
-	return GenerateWeightedRandomIndexFromStream(Weights, FRandomStream(static_cast<int32>(FDateTime::UtcNow().ToUnixTimestamp())), RandomIndex);
+	if (Weights.IsEmpty()) return;
+
+	auto Sampler = FIndexWeightedSampler(Weights.Num(), Weights);
+	Sampler.Initialize();
+
+	RandomIndex = Sampler.GetEntryIndex(FMath::FRand(), FMath::FRand());
 }
 
 void UWeightedRandomBlueprintFunctionLibrary::GenerateWeightedRandomIndexFromStream(const TArray<float>& Weights, const FRandomStream& RandomStream, int32& RandomIndex)
@@ -52,7 +57,17 @@ void UWeightedRandomBlueprintFunctionLibrary::GenerateWeightedRandomIndexFromStr
 
 void UWeightedRandomBlueprintFunctionLibrary::GenerateWeightedRandomIndices(const TArray<float>& Weights, const int32 NumIndicesToGenerate, TArray<int32>& RandomIndices)
 {
-	return GenerateWeightedRandomIndicesFromStream(Weights, NumIndicesToGenerate, FRandomStream(static_cast<int32>(FDateTime::UtcNow().ToUnixTimestamp())), RandomIndices);
+	if (Weights.IsEmpty()) return;
+
+	auto Sampler = FIndexWeightedSampler(Weights.Num(), Weights);
+	Sampler.Initialize();
+
+	RandomIndices.SetNumUninitialized(NumIndicesToGenerate);
+	for (int32 i = 0; i < NumIndicesToGenerate; i++)
+	{
+		const auto RandomIndex = Sampler.GetEntryIndex(FMath::FRand(), FMath::FRand());
+		RandomIndices[i] = RandomIndex;
+	}
 }
 
 void UWeightedRandomBlueprintFunctionLibrary::GenerateWeightedRandomIndicesFromStream(const TArray<float>& Weights, const int32 NumIndicesToGenerate, const FRandomStream& RandomStream, TArray<int32>& RandomIndices)
